@@ -22,7 +22,7 @@ graph TD
     ViewErrors --> ClickRerun[Nhấp nút Chạy lại]
     ClickRerun --> CallWorker[Gọi dịch vụ Worker chạy lại Luật]
     CallWorker --> CheckResponse{Worker phản hồi thành công?}
-    CheckResponse -- Thành công --> UpdateStatus[Cập trạng thái rule_run = Khởi tạo & Đang chạy]
+    CheckResponse -- Thành công --> UpdateStatus[Cập nhật trạng thái rule_run = Khởi tạo & Đang chạy]
     UpdateStatus --> Success[Thông báo: Đang chạy lại usecase tự động]
     CheckResponse -- Thất bại --> Error[Thông báo: Lỗi kết nối máy chủ thực thi!]
     Success --> End([Kết thúc])
@@ -31,7 +31,17 @@ graph TD
 
 ---
 
-## 2. Giao diện người dùng (UI)
+## 2. Mô tả chi tiết màn hình (Sườn khung giao diện)
 
-*Chi tiết thiết kế và thành phần giao diện màn hình xem tại:*
-*   [Tài liệu thiết kế giao diện: UI_XU_LY_LOI_HE_THONG.md](file:///Users/whis/Anh/ISAAP/UI/UI_XU_LY_LOI_HE_THONG.md)
+### Giao diện thiết kế (Figma UI Export)
+*Chưa có hình ảnh giao diện Figma được kết xuất cho màn hình này.*
+
+### Đặc tả các thành phần giao diện
+*Ghi chú: Mô tả chi tiết các trường thông tin và thuộc tính điều khiển trên giao diện màn hình chức năng.*
+
+| STT | Thành phần | Kiểu dữ liệu | I/O | Giá trị khởi tạo | Mô tả chi tiết (Mapping CSDL & Thao tác Button) |
+| :---: | :--- | :--- | :---: | :--- | :--- |
+| 1 | **Bảng danh sách Usecase tự động lỗi** | Table | OUTPUT | Danh sách UC lỗi | Hiển thị danh sách usecase loại Auto bị lỗi, tên lỗi, thời gian xảy ra |
+| 2 | **Log lỗi chi tiết** | Label / Textarea (Read-only) | OUTPUT | Lấy từ DB | Hiển thị chi tiết lỗi kỹ thuật của hệ thống. Mapping DB: `rule_run.error` |
+| 3 | **Nút Chạy lại** | Button | INPUT | Enable | Kích hoạt gửi tín hiệu cho worker chạy lại Usecase tự động được chọn |
+| 4 | **Nút Chạy lại tất cả lỗi của đơn vị** | Button | INPUT | Enable | Kích hoạt chạy lại toàn bộ Usecase tự động lỗi của đơn vị được chọn |
