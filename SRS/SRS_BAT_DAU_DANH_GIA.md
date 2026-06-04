@@ -32,13 +32,7 @@ graph TD
 
 ---
 
-## 2. Mô tả chi tiết màn hình (Sườn khung giao diện)
+## 2. Giao diện người dùng (UI)
 
-*Ghi chú: Mô tả chi tiết các trường thông tin và thuộc tính điều khiển trên giao diện màn hình chức năng.*
-
-| STT | Thành phần | Kiểu dữ liệu | I/O | Giá trị khởi tạo | Mô tả chi tiết (Mapping CSDL & Thao tác Button) |
-| :---: | :--- | :--- | :---: | :--- | :--- |
-| 1 | **Nút Bắt đầu đánh giá** | Button | INPUT | Enable/Disable | Chỉ hiển thị khi chương trình ở trạng thái Chưa đánh giá |
-| 2 | **Popup Xác nhận bắt đầu** | Popup | OUTPUT | Ẩn | Tiêu đề: Xác nhận chạy chương trình. Nội dung: Bạn có chắc chắn muốn bắt đầu đánh giá chương trình này? Hệ thống sẽ sinh các bản ghi và kích hoạt đánh giá tự động. |
-| 3 | **Nút Xác nhận** | Button | INPUT | Enable | Click để kích hoạt chương trình và đóng popup |
-| 4 | **Nút Hủy** | Button | INPUT | Enable | Click để hủy lệnh và đóng popup |
+*Chi tiết thiết kế và thành phần giao diện màn hình xem tại:*
+*   [Tài liệu thiết kế giao diện: UI_BAT_DAU_DANH_GIA.md](file:///Users/whis/Anh/ISAAP/UI/UI_BAT_DAU_DANH_GIA.md)
