@@ -387,7 +387,7 @@ erDiagram
 | 3 | **description** | VARCHAR | Mô tả chi tiết chương trình |
 | 4 | **start_date** | TIMESTAMP | Ngày bắt đầu chương trình |
 | 5 | **end_date** | TIMESTAMP | Ngày kết thúc dự kiến chương trình |
-| 6 | **status** | INT2 | Trạng thái chương trình (Chưa chạy, đang chạy, hoàn thành, hủy...) |
+| 6 | **status** | INT2 | Trạng thái chương trình đánh giá:<br>- `0`: Chưa đánh giá<br>- `1`: Đang đánh giá<br>- `2`: Hoàn thành<br>- `3`: Hủy áp dụng<br>- `4`: Chờ hoàn thành |
 | 7 | **program_auditor** | INT4 | ID Kiểm toán viên / Điều phối viên chính của chương trình |
 | 8 | **evaluation_round** | INT4 | Vòng đánh giá chương trình (Round) |
 | 9 | **round_2_reason** | TEXT | Lý do phải chuyển sang đánh giá vòng 2 |
@@ -662,7 +662,6 @@ erDiagram
 | 5 | **created_at** | TIMESTAMP | Thời gian tạo phiên |
 | 6 | **updated_at** | TIMESTAMP | Thời gian cập nhật phiên |
 | 7 | **created_by** | INT4 | ID người chạy |
-| 8 | **cycle_value** | DATE | Giá trị chu kỳ chạy |
 | 9 | **start_date** | TIMESTAMP | Thời gian bắt đầu chạy thực tế |
 | 10 | **end_date** | TIMESTAMP | Thời gian hoàn thành chạy thực tế |
 | 11 | **rule_version_id** | INT4 | ID phiên bản luật chạy |

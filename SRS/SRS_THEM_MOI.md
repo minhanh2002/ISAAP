@@ -34,4 +34,4 @@
 | 6 | **Cấu hình Đầu mối đơn vị** | Dropdown | INPUT | Trống | Chọn người đại diện nộp sở cứ. Mapping lưu: `department_representative_mapping` (`representative_id`). |
 | 7 | **Cấu hình Người đánh giá** | Dropdown | INPUT | Trống | Chọn chuyên gia đánh giá đơn vị. Mapping lưu: `department_reviewer_mapping` (`reviewer_id`). |
 | 8 | **Thiết lập Usecase** | Tree View Checkbox | INPUT | Trống | Chọn các Đối tượng > Tiêu chí > Usecase áp dụng. Mapping lưu: Các bảng `department_object_mapping`, `object_criteria_mapping`, `criteria_usecase_mapping`. |
-| 9 | **Nút Lưu lại** | Button | INPUT | Enable | Lưu thông tin. Rule: Validate toàn bộ form trước khi submit. Insert bản ghi mới vào `evaluation_program` (`status` = Khởi tạo/Chưa đánh giá). |
+| 9 | **Nút Lưu lại** | Button | INPUT | Enable | Lưu thông tin. Rule: Validate toàn bộ form trước khi submit. Insert bản ghi mới vào `evaluation_program` (`status` = 0 - Chưa đánh giá). |
