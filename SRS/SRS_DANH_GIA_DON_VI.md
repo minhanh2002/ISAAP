@@ -16,17 +16,18 @@
 
 ### Giao diện thiết kế (Figma UI Export)
 
-![Đánh giá đơn vị lần 1.png](file:///Users/whis/Anh/ISAAP/UI/images/Danh_Gia_Don_Vi/Đánh%20giá%20đơn%20vị%20lần%201.png)
-![Đánh giá đơn vị lần 2.png](file:///Users/whis/Anh/ISAAP/UI/images/Danh_Gia_Don_Vi/Đánh%20giá%20đơn%20vị%20lần%202.png)
-![Đánh giá từng UC.png](file:///Users/whis/Anh/ISAAP/UI/images/Danh_Gia_Don_Vi/Đánh%20giá%20từng%20UC.png)
+![Đánh giá đơn vị lần 1.png](../UI/images/Danh_Gia_Don_Vi/Đánh%20giá%20đơn%20vị%20lần%201.png)
+![Đánh giá đơn vị lần 2.png](../UI/images/Danh_Gia_Don_Vi/Đánh%20giá%20đơn%20vị%20lần%202.png)
+![Đánh giá từng UC.png](../UI/images/Danh_Gia_Don_Vi/Đánh%20giá%20từng%20UC.png)
 
 ### Đặc tả các thành phần giao diện
 *Ghi chú: Mô tả chi tiết các trường thông tin và thuộc tính điều khiển trên giao diện màn hình chức năng.*
 
 | STT | Thành phần | Kiểu dữ liệu | I/O | Giá trị khởi tạo | Mô tả chi tiết (Mapping CSDL & Thao tác Button) |
 | :---: | :--- | :--- | :---: | :--- | :--- |
-| 1 | **Danh sách Usecase** | Table/List | OUTPUT | Dữ liệu DB | Hiển thị các usecase của đơn vị cần đánh giá |
-| 2 | **Nội dung sở cứ** | Link/Preview | OUTPUT | File từ Đơn vị | Xem trước hoặc tải về file sở cứ đơn vị đã nộp |
-| 3 | **Trạng thái Đạt/Không đạt** | Radio/Switch | INPUT | Chưa chọn | Chọn kết quả đánh giá cho Usecase |
-| 4 | **Lý do (Nếu Không đạt)** | Text Area | INPUT | Trống | Nhập lý do hoặc yêu cầu bổ sung sở cứ nếu đánh giá Không đạt |
-| 5 | **Nút Lưu kết quả** | Button | INPUT | Enable | Lưu trạng thái đánh giá vào CSDL |
+| 1 | **File sở cứ (Preview)** | File Viewer | OUTPUT | DB | Hiển thị danh sách file để tải về hoặc xem trước. Mapping lấy: `usecase_review_file.path`. |
+| 2 | **Nội dung giải trình** | Label | OUTPUT | DB | Mapping lấy: `usecase_manual_review_mapping.respond_content`. |
+| 3 | **Đánh giá Kết quả** | Radio Button | INPUT | Chưa chọn | Chọn Đạt hoặc Không đạt. Rule: Bắt buộc chọn 1. Mapping lưu: `usecase_manual_review_mapping.result` (1: Đạt, 0: Không đạt). |
+| 4 | **Lý do không đạt** | Text Area | INPUT | Trống | Nhập lý do. Rule: Bắt buộc nếu chọn Không đạt. Mapping lưu: `usecase_manual_review_mapping.reason_fail`. |
+| 5 | **Yêu cầu bổ sung** | Text Area | INPUT | Trống | Nhập yêu cầu nếu bắt đơn vị làm lại. Mapping lưu: `usecase_manual_review_mapping.request_content`. |
+| 6 | **Nút Lưu kết quả** | Button | INPUT | Enable | Xử lý DB: Update `usecase_manual_review_mapping.result`, cập nhật trạng thái `status` = 2 (Hoàn thành) hoặc 3 (Yêu cầu bổ sung). Cập nhật `program_department_mapping.evaluation_result`. |

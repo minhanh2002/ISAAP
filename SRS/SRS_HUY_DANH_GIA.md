@@ -35,7 +35,7 @@ graph TD
 ## 2. Mô tả chi tiết màn hình (Sườn khung giao diện)
 
 ### Giao diện thiết kế (Figma UI Export)
-![Giao diện Hủy đánh giá chương trình](file:///Users/whis/Anh/ISAAP/UI/images/Popup_Huy.png)
+![Giao diện Hủy đánh giá chương trình](../UI/images/Popup_Huy.png)
 
 ### Đặc tả các thành phần giao diện
 *Ghi chú: Mô tả chi tiết các trường thông tin và thuộc tính điều khiển trên giao diện màn hình chức năng.*
