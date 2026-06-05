@@ -233,5 +233,5 @@ ORDER BY ep.created_at DESC;
 | 4 | data.content | Array | Danh sách kết quả chương trình tìm thấy |
 | 5 | data.totalElements | Long | Tổng số lượng bản ghi thỏa mãn điều kiện lọc |
 
----
+--------
 
