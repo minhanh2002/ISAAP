@@ -14,6 +14,7 @@
 | Ngày thay đổi | Vị trí thay đổi | A/M/D (*) | Nguồn gốc | Phiên bản cũ | Mô tả thay đổi | Phiên bản mới |
 | :--- | :--- | :---: | :--- | :--- | :--- | :--- |
 | 05/06/2026 | Toàn bộ tài liệu | M | Yêu cầu người dùng | V1.0 | Cập nhật định dạng tài liệu, viết lại nội dung bằng ngôn ngữ nghiệp vụ, bổ sung xử lý sinh Usecase thủ công và kích hoạt Usecase tự động. | V2.0 |
+| 09/06/2026 | Luồng nghiệp vụ | M | Yêu cầu người dùng | V2.0 | Cập nhật luồng xử lý chi tiết theo mẫu chuẩn mới. | V2.1 |
 
 *Ghi chú ký hiệu (\*):*
 - **A\***: Add (Tạo mới)
@@ -90,18 +91,51 @@ graph TD
 | 4 | **Nút Xác nhận** | Button | Input | Enable | - Click để thực hiện gửi yêu cầu Bắt đầu chương trình lên máy chủ.<br>- Xử lý CSDL đồng bộ:<br>  + Cập nhật `evaluation_program.status` = 1 (Đang đánh giá).<br>  + Khởi tạo bản ghi vào `usecase_manual_review_mapping` (status = 0: Chưa nộp sở cứ).<br>  + Khởi tạo bản ghi vào `rule_run` (phiên chạy tự động). |
 
 #### 3.1.4.4. Luồng nghiệp vụ
-- **Bước 1**: Người dùng đăng nhập và truy cập vào màn hình Danh sách chương trình đánh giá.
-- **Bước 2**: Tại dòng dữ liệu của một chương trình ở trạng thái "Chưa đánh giá", người dùng nhấn vào biểu tượng **[Bắt đầu đánh giá]**.
-- **Bước 3**: Hệ thống (Frontend) và API gọi kiểm tra tiền điều kiện để xử lý thao tác bắt đầu:
-  - **Trường hợp lỗi 1 (Trạng thái chương trình không hợp lệ)**: Nếu chương trình không còn ở trạng thái "Chưa đánh giá" (ví dụ đã bị admin khác chạy trước đó), hệ thống hiển thị thông báo lỗi (Toast đỏ): `"Chương trình không ở trạng thái cho phép bắt đầu. Vui lòng tải lại trang."` và chặn thao tác.
-  - **Trường hợp lỗi 2 (Thiếu quyền hạn thao tác)**: Nếu người dùng bị mất phân quyền đột xuất, hệ thống hiển thị lỗi: `"Bạn không có quyền thực hiện thao tác bắt đầu chương trình này."`
-  - **Trường hợp Hợp lệ**: Nếu vượt qua kiểm tra, hệ thống hiển thị Popup Xác nhận bắt đầu đánh giá.
-- **Bước 4**: Tại Popup Xác nhận:
-  - Nếu người dùng chọn nút **[Hủy]**, hệ thống đóng Popup và không làm gì thêm.
-  - Nếu người dùng chọn nút **[Xác nhận]**, hệ thống gửi yêu cầu Bắt đầu chương trình lên máy chủ.
-- **Bước 5**: Hệ thống (Server) xử lý nghiệp vụ sinh dữ liệu:
-  - Hệ thống cập nhật trạng thái của chương trình thành "Đang đánh giá" (`status` = 1).
-  - Hệ thống tự động phân bổ và **sinh hàng loạt các bản ghi Usecase thủ công** cho tất cả các đơn vị tham gia. Các bản ghi này được khởi tạo với trạng thái ban đầu là "Chưa nộp sở cứ", mục đích để các Đầu mối đơn vị bắt đầu vào hệ thống để đính kèm minh chứng.
-  - Đồng thời, hệ thống tự động **sinh các phiên chạy Usecase tự động** (các lịch chạy quét lỗ hổng/thu thập cấu hình) đẩy vào hàng đợi của hệ thống để bắt đầu thực thi ngầm.
-  - **Trường hợp lỗi 3 (Lỗi tạo dữ liệu/Máy chủ)**: Nếu trong quá trình sinh hàng loạt Usecase xảy ra sự cố (timeout, đứt kết nối CSDL), hệ thống sẽ hoàn tác (Rollback) toàn bộ quá trình, giữ nguyên chương trình ở trạng thái "Chưa đánh giá" và hiển thị thông báo lỗi: `"Quá trình khởi tạo dữ liệu đánh giá gặp sự cố. Vui lòng thử lại sau."`
-  - **Thành công**: Cập nhật hoàn tất, hệ thống đóng popup, tải lại danh sách chương trình và hiển thị thông báo (Toast xanh): `"Thành công. Chương trình đã bắt đầu đánh giá."`
+- **Bước 1**: Người dùng đăng nhập và truy cập theo đường dẫn: Menu chương trình đánh giá >> Bắt đầu đánh giá
+- **Bước 2**: Hệ thống hiển thị popup Bắt đầu đánh giá chương trình
+  - **TH1**: Người dùng click Hủy, hệ thống đóng popup, hủy bỏ thao tác
+  - **TH2**: Người dùng click Xác nhận, hệ thống thực hiện kiểm tra trạng thái của chương trình đánh giá, phân quyền thao tác, vai trò của người dùng như sau:
+    - Người dùng thuộc nhóm quyền Admin hệ thống hoặc không thuộc quyền Admin hệ thống nhưng:
+      - Người dùng có quyền truy cập chức năng “Chương trình đánh giá”
+      - Người dùng có quyền thao tác “Hoàn thành đánh giá”
+      - Người dùng là đầu mối điều phối của chương trình
+    - Chương trình đánh giá có trạng thái “Chưa đánh giá” `evaluation_program.status = 0`
+    
+    - **Nếu hợp lệ**: Hệ thống thực hiện xử lý đồng bộ: 
+      - Cập nhật bảng `evaluation_program`:
+        - `status` = 1 (Đang đánh giá)
+        - `started_at` = sysdate
+        - `updated_at` = sysdate
+        - `updated_by` = currentUserId
+      - Cập nhật bảng `program_department_mapping`:
+        - Trạng thái đánh giá thủ công (`manual_review_status`):
+          - **TH1**: Nếu đơn vị có ít nhất 01 usecase thủ công thì `manual_review_status` = 0 (Chưa nộp sở cứ)
+          - **TH2**: Nếu đơn vị không có usecase thủ công thì `manual_review_status` = 2 (Đã xác nhận)
+        - Trạng thái đánh giá tự động (`auto_review_status`):
+          - **TH1**: Nếu đơn vị có ít nhất 01 usecase tự động thì `auto_review_status` = 1 (Đang đánh giá)
+          - **TH2**: Nếu đơn vị không có usecase tự động thì `auto_review_status` = 2 (Đã xác nhận)
+      - Khởi tạo bản ghi trong bảng `usecase_manual_review_mapping` tương ứng với số lượng usecase thủ công của chương trình đánh giá:
+        - `id`: tăng tự động
+        - `status` = 0 (Chưa nộp sở cứ)
+        - `criteria_usecase_id` = `criteria_usecase_mapping.id`
+        - `version_program` = `evaluation_program.evaluation_round`
+        - `created_at` = sysdate
+        - `updated_at` = sysdate
+      - Khởi tạo bản ghi trong bảng `rule_run` tương ứng với số lượng usecase tự động của chương trình đánh giá:
+        - `id`: tăng tự động
+        - `status` = 1 (Đang chạy)
+        - `version_program` = `evaluation_program.evaluation_round`
+        - `created_at` = sysdate
+        - `updated_at` = sysdate
+        - `run_type` = manual
+        - `rule_version_id` = `criteria_usecase_mapping.rule_version_id`
+        - `start_date` = sysdate
+      - Đóng popup xác nhận, trở về màn hình trước đó và trả về thông báo “Bắt đầu đánh giá chương trình thành công”
+      
+    - **Nếu không hợp lệ**:
+      - Trường hợp người dùng không có quyền thì thực hiện đóng popup xác nhận và trả về thông báo “Bạn không có quyền Bắt đầu đánh giá chương trình”
+      - Trường hợp trạng thái chương trình không hợp lệ thì thực hiện đóng popup xác nhận và trả về thông báo “Bắt đầu đánh giá chương trình không thành công”
+        - đang đánh giá: `evaluation_program.status` = 1
+        - đã hoàn thành đánh giá: `evaluation_program.status` = 2
+        - đã hủy đánh giá: `evaluation_program.status` = 3
+        - đang chờ hoàn thành: `evaluation_program.status` = 4
